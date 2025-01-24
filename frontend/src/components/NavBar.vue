@@ -17,22 +17,17 @@
   </fwb-navbar>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue/dist/vue.d.mts";
 import {
   FwbNavbar,
   FwbNavbarCollapse,
   FwbNavbarLink,
   FwbNavbarLogo,
-  FwbA
+  FwbA,
 } from "flowbite-vue";
 import { useUserStore } from "@/store/modules/users";
 
 const store = useUserStore();
-const token = computed(() => store.token);
 const isLoggedIn = computed(() => store.isLoggedIn);
-
-function logout() {
-  store.setUser(null);
-}
 </script>

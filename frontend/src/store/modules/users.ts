@@ -4,7 +4,7 @@ import axios from "axios";
 
 interface User {
   username: string;
-  password: string;
+  email: string;
   token: string;
 }
 
