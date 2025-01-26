@@ -24,15 +24,17 @@
 
 <script setup lang="ts">
 import { ref } from "vue/dist/vue.d.mts";
+import { useRouter } from "vue-router";
 import { FwbButton, FwbCard, FwbInput } from "flowbite-vue";
 import { useUserStore } from "@/store/modules/users";
 
+const router = useRouter();
 const email = ref("");
 const password = ref("");
 const store = useUserStore();
 
 function login() {
-  store.login(email.value, password.value);
+  store.login(email.value, password.value).then((_) => router.push("/"));
 }
 </script>
 
