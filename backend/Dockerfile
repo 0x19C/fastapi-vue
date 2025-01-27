@@ -14,7 +14,7 @@ RUN pip install -r requirements.txt
 COPY migrations .
 COPY pyproject.toml .
 
-COPY src/ .
+COPY src ./src
 
 # create db
 RUN python src/database/ensure_db.py

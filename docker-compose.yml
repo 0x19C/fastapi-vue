@@ -1,6 +1,30 @@
 version: '3.8'
 
 services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - 3306:3306
+    env_file:
+      - ./.env-docker
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+  frontend:
+    build:
+      context: ./frontend
+      target: production-stage
+      args:
+        - VITE_API_ENDPOINT=${VITE_API_ENDPOINT}
+    container_name: corpy_frontend
+    env_file:
+      - ./.env-docker
+    ports:
+      - 80:80
   backend:
     build:
       context: ./backend
@@ -22,30 +46,6 @@ services:
       - ./.env-docker
     depends_on:
       - db
-  frontend:
-    build:
-      context: ./frontend
-      target: production-stage
-      args:
-        - VITE_API_ENDPOINT=${VITE_API_ENDPOINT}
-    container_name: corpy_frontend
-    env_file:
-      - ./.env-docker
-    ports:
-      - 80:80
-  db:
-    image: mysql:8
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-    ports:
-      - 3306:3306
-    env_file:
-      - ./.env-docker
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
 
 volumes:
   db_data:
