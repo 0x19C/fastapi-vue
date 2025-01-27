@@ -31,8 +31,3 @@ COPY migrations .
 COPY pyproject.toml .
 
 COPY src ./src
-
-# create db
-RUN python src/database/ensure_db.py
-
-RUN aerich upgrade
