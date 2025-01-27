@@ -28,6 +28,8 @@ import { useRouter } from "vue-router";
 import { FwbButton, FwbCard, FwbInput } from "flowbite-vue";
 import { useUserStore } from "@/store/modules/users";
 import { useNotificationStore } from "@/store/modules/notifications";
+import { isValidEmail, isStrongPassword } from "@/utils/validations";
+import CONST from "@/utils/consts";
 
 const router = useRouter();
 const email = ref("");
@@ -36,6 +38,21 @@ const store = useUserStore();
 const notificationStore = useNotificationStore();
 
 function login() {
+  if (!isValidEmail(email.value)) {
+    notificationStore.showNotification(
+      CONST.MESSAGES.VALIDATIONS.INVALIDEMAIL,
+      "warning"
+    );
+    return;
+  }
+  if (!isStrongPassword(password.value)) {
+    notificationStore.showNotification(
+      CONST.MESSAGES.VALIDATIONS.NOTSTRONGPASSWORD,
+      "warning",
+      CONST.MESSAGES.VALIDATIONS.NOTSTRONGPASSWORDDETAILS
+    );
+    return;
+  }
   store.login(email.value, password.value).then(({ message, type }) => {
     notificationStore.showNotification(message, type);
     if (type == "success") router.push("/");
