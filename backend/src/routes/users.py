@@ -3,7 +3,6 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from fastapi.security import OAuth2PasswordRequestForm
 
 from tortoise.contrib.fastapi import HTTPNotFoundError
 
@@ -67,6 +66,25 @@ async def login(user: UserLogInSchema):
 )
 async def read_users_me(current_user: UserOutSchema = Depends(get_current_user)):
     return current_user
+
+
+@router.post("/logout")
+async def logout():
+    content = {
+        "message": "You've successfully logged out. See you later!"
+    }
+    response = JSONResponse(content=content)
+    response.set_cookie(
+        "Authorization",
+        value="",
+        # httponly=True,
+        max_age=1800,
+        expires=1,
+        samesite="None",
+        secure=True,
+    )
+
+    return response
 
 
 @router.delete(

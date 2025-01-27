@@ -27,14 +27,19 @@ import { ref } from "vue/dist/vue.d.mts";
 import { useRouter } from "vue-router";
 import { FwbButton, FwbCard, FwbInput } from "flowbite-vue";
 import { useUserStore } from "@/store/modules/users";
+import { useNotificationStore } from "@/store/modules/notifications";
 
 const router = useRouter();
 const email = ref("");
 const password = ref("");
 const store = useUserStore();
+const notificationStore = useNotificationStore();
 
 function login() {
-  store.login(email.value, password.value).then((_) => router.push("/"));
+  store.login(email.value, password.value).then(({ message, type }) => {
+    notificationStore.showNotification(message, type);
+    if (type == "success") router.push("/");
+  });
 }
 </script>
 
