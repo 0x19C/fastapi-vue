@@ -19,7 +19,7 @@ services:
       context: ./frontend
       target: production-stage
       args:
-        - VITE_API_ENDPOINT=${VITE_API_ENDPOINT}
+        - VITE_API_ENDPOINT="http://corpy_backend:8000"
     container_name: corpy_frontend
     env_file:
       - ./.env-docker
@@ -29,13 +29,13 @@ services:
     build:
       context: ./backend
       args:
-        - SECRET_KEY=${SECRET_KEY}
-        - DATABASE_URL=${DATABASE_URL}
-        - DB_HOST=${DB_HOST}
-        - DB_USER=${DB_USER}
-        - DB_PASSWORD=${DB_PASSWORD}
-        - DB_PORT=${DB_PORT}
-        - DB_NAME=${DB_NAME}
+        - SECRET_KEY=tUe0v9b-rHFFt7KYMZNFeBS6FDMj9tmRuNH018pJBrg=
+        - DATABASE_URL="mysql://root:CorpyCorpy@db:3306/corpy_test"
+        - DB_HOST="db"
+        - DB_USER="root"
+        - DB_PASSWORD="CorpyCorpy"
+        - DB_PORT=3306
+        - DB_NAME=corpy_test
     ports:
       - 8000:8000
     container_name: corpy_backend
