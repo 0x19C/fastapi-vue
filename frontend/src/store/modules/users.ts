@@ -22,11 +22,57 @@ export const useUserStore = defineStore("user", () => {
   const username = computed(() => user.value?.username || null);
   const isLoggedIn = computed(() => !!user.value?.token);
 
-  function setUser(u: User | null) {
+  const setUser = (u: User | null) => {
     user.value = u;
-  }
+  };
 
-  async function login(email: string, password: string) {
+  const register = async (
+    username: string,
+    email: string,
+    password: string
+  ) => {
+    return await axios
+      .post(`${import.meta.env.VITE_API_ENDPOINT}/register`, {
+        username,
+        email,
+        password,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          return {
+            message: "You've successfully been registered. Welcome!",
+            type: "success" as AlertType,
+          };
+        } else {
+          return {
+            message: res.data.message,
+            type: "warning" as AlertType,
+          };
+        }
+      })
+      .catch(
+        ({
+          status,
+          message,
+          response: {
+            data: { detail },
+          },
+        }) => {
+          if (status >= 400 && status < 500) {
+            return {
+              message: detail,
+              type: "warning" as AlertType,
+            };
+          }
+          return {
+            message: message,
+            type: "danger" as AlertType,
+          };
+        }
+      );
+  };
+
+  const login = async (email: string, password: string) => {
     const { data, message, type } = await axios
       .post(`${import.meta.env.VITE_API_ENDPOINT}/login`, {
         email,
@@ -74,9 +120,9 @@ export const useUserStore = defineStore("user", () => {
       data ? { email: data.email, username: data.username, token } : null
     );
     return { message, type };
-  }
+  };
 
-  async function logout() {
+  const logout = async () => {
     const { message, type } = await axios
       .post(`${import.meta.env.VITE_API_ENDPOINT}/logout`)
       .then((res) => {
@@ -109,9 +155,9 @@ export const useUserStore = defineStore("user", () => {
       );
     setUser(null);
     return { message, type };
-  }
+  };
 
-  async function whoami() {
+  const whoami = async () => {
     const data = await axios
       .get(`${import.meta.env.VITE_API_ENDPOINT}/users/whoami`)
       .then((res) => {
@@ -125,11 +171,20 @@ export const useUserStore = defineStore("user", () => {
     setUser(
       data ? { email: data.email, username: data.username, token } : null
     );
-  }
+  };
 
   onMounted(() => {
     whoami();
   });
 
-  return { user, username, isLoggedIn, setUser, login, whoami, logout };
+  return {
+    user,
+    username,
+    isLoggedIn,
+    setUser,
+    register,
+    login,
+    whoami,
+    logout,
+  };
 });

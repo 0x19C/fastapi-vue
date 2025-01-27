@@ -1,7 +1,7 @@
 <template>
   <fwb-navbar>
     <template #logo>
-      <fwb-navbar-logo alt="Flowbite logo" image-url="/logo.svg" link="#">
+      <fwb-navbar-logo alt="Flowbite logo" image-url="/logo.svg" link="/">
         Flowbite
       </fwb-navbar-logo>
     </template>
@@ -73,10 +73,10 @@ const messageType = computed(() => notificationStore.type);
 const messageTitle = computed(() => notificationStore.title);
 const messageList = computed(() => notificationStore.messages);
 
-function logout() {
+const logout = () => {
   store.logout().then(({ message, type }) => {
     notificationStore.showNotification(message, type);
     if (type == "success") router.push("/login");
   });
-}
+};
 </script>

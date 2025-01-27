@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="min-h-[500px] flex items-center justify-center">
     <fwb-card img-alt="Desk" img-src="./login.png" variant="image">
       <div class="p-5 space-y-5">
         <fwb-input
@@ -15,6 +15,7 @@
           label="Password"
           size="lg"
           required
+          type="password"
         />
         <fwb-button color="dark" size="lg" @click="login"> Login </fwb-button>
       </div>
@@ -37,7 +38,7 @@ const password = ref("");
 const store = useUserStore();
 const notificationStore = useNotificationStore();
 
-function login() {
+const login = () => {
   if (!isValidEmail(email.value)) {
     notificationStore.showNotification(
       CONST.MESSAGES.VALIDATIONS.INVALIDEMAIL,
@@ -57,16 +58,5 @@ function login() {
     notificationStore.showNotification(message, type);
     if (type == "success") router.push("/");
   });
-}
+};
 </script>
-
-<style>
-@media (min-width: 1024px) {
-  .login {
-    min-height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-</style>

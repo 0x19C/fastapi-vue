@@ -10,6 +10,7 @@ export default {
         // "Includes at least one numeric digit",
         // "Includes at least one special character (e.g., !@#$%^&*())",
       ],
+      PASSWORDNOTMATCHED: "Confirm password is not matched.",
     },
   },
 };
