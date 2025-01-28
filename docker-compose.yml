@@ -19,6 +19,7 @@ services:
     container_name: corpy_frontend
     volumes:
       - ./frontend:/app
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "${FE_PORT}:${FE_PORT}"
   backend:
