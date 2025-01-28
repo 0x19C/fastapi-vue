@@ -10,4 +10,6 @@ RUN npm install
 COPY ./frontend .
 RUN npm run build
 
+RUN ls -l node_modules/.bin
+
 CMD ["npm", "run", "preview"]
