@@ -22,12 +22,12 @@ WORKDIR /app
 ENV PATH="${PATH}:/root/.local/bin"
 ENV PYTHONPATH=.
 
-COPY requirements.txt .
+COPY ./backend/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # for migrations
-COPY migrations .
-COPY pyproject.toml .
+COPY ./backend/migrations .
+COPY ./backend/pyproject.toml .
 
-COPY src ./src
+COPY ./backend/src ./src
