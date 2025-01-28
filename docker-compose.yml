@@ -15,12 +15,16 @@ services:
   frontend:
     build:
       context: .
+      dockerfile: ./docker/Dockerfile.FE
     container_name: corpy_frontend
+    volumes:
+      - ./frontend:/app
     ports:
       - "${FE_PORT}:${FE_PORT}"
   backend:
     build:
       context: .
+      dockerfile: ./docker/Dockerfile.BE
       args:
         - SECRET_KEY=${SECRET_KEY}
         - DATABASE_URL=${DATABASE_URL}
