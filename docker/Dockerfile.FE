@@ -1,6 +1,9 @@
 # Step 1: Build the app using a node image
 FROM node:20.18.1 AS build
 
+ARG VITE_API_ENDPOINT
+ENV VITE_API_ENDPOINT=${VITE_API_ENDPOINT}
+
 RUN mkdir app
 WORKDIR /app
 

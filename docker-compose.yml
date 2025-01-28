@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile.FE
+      args:
+        - VITE_API_ENDPOINT=${VITE_API_ENDPOINT}
     container_name: corpy_frontend
     volumes:
       - ./frontend:/app
