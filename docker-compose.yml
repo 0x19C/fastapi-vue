@@ -1,14 +1,14 @@
-version: '3.8'
+version: '3.9'
 
 services:
   db:
     image: mysql:8
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: CorpyCorpy
-      MYSQL_DATABASE: corpy_test
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     ports:
-      - 3306:3306
+      - "${DB_PORT}:${DB_PORT}"
     env_file:
       - ./.env-docker
     volumes:
@@ -16,32 +16,30 @@ services:
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
   frontend:
     build:
-      context: ./frontend
-      target: production-stage
-      args:
-        - VITE_API_ENDPOINT=http://corpy_backend:8000
+      context: .
     container_name: corpy_frontend
     env_file:
       - ./.env-docker
     ports:
-      - 80:80
+      - "${FE_PORT}:${FE_PORT}"
   backend:
     build:
-      context: ./backend
+      context: .
       args:
-        - SECRET_KEY=tUe0v9b-rHFFt7KYMZNFeBS6FDMj9tmRuNH018pJBrg=
-        - DATABASE_URL=mysql://root:CorpyCorpy@db:3306/corpy_test
-        - DB_HOST=db
-        - DB_USER=root
-        - DB_PASSWORD=CorpyCorpy
-        - DB_PORT=3306
-        - DB_NAME=corpy_test
+        - SECRET_KEY=${SECRET_KEY}
+        - DATABASE_URL=${DATABASE_URL}
+        - DB_HOST=${DB_HOST}
+        - DB_USER=${DB_USER}
+        - DB_PASSWORD=${DB_PASSWORD}
+        - DB_PORT=${DB_PORT}
+        - DB_NAME=${DB_NAME}
+        - CORPY_FRONTEND=${CORPY_FRONTEND}
     ports:
-      - 8000:8000
+      - "${BE_PORT}:${BE_PORT}"
     container_name: corpy_backend
     volumes:
       - ./backend:/app
-    command: uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+    command: uvicorn src.main:app --reload --host 0.0.0.0 --port ${BE_PORT}
     env_file:
       - ./.env-docker
     depends_on:

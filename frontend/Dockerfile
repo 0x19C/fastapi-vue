@@ -1,8 +1,5 @@
 # build stage
-FROM node:20.18.1 as build-stage
-
-ARG VITE_API_ENDPOINT
-ENV VITE_API_ENDPOINT=${VITE_API_ENDPOINT}
+FROM node:20.18.1
 
 RUN mkdir app
 WORKDIR /app
@@ -13,14 +10,4 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# production stage
-FROM nginx:stable-alpine as production-stage
-
-# Copy the custom nginx config file
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Ensure the build output is copied to the right location
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "run", "preview"]
