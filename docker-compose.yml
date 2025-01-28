@@ -23,7 +23,7 @@ services:
       - ./frontend:/app
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - "${FE_PORT}:${FE_PORT}"
+      - "${FE_PORT}:80"
   backend:
     build:
       context: .
