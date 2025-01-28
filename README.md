@@ -1,6 +1,7 @@
 # Build Services
 
 ```
+cp .env-docker .env
 docker-compose up -d
 ```
 
