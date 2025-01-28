@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.FE
+      args:
+        - VITE_API_ENDPOINT=${VITE_API_ENDPOINT}
+    container_name: corpy_frontend
+    volumes:
+      - ./frontend:/app
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "${FE_PORT}:80"
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.BE
+      args:
+        - SECRET_KEY=${SECRET_KEY}
+        - DATABASE_URL=${DATABASE_URL}
+        - DB_HOST=${DB_HOST}
+        - DB_USER=${DB_USER}
+        - DB_PASSWORD=${DB_PASSWORD}
+        - DB_PORT=${DB_PORT}
+        - DB_NAME=${DB_NAME}
+        - CORPY_FRONTEND=${CORPY_FRONTEND}
+    ports:
+      - "${BE_PORT}:${BE_PORT}"
+    container_name: corpy_backend
+    volumes:
+      - ./backend:/app
+    command: uvicorn src.main:app --reload --host 0.0.0.0 --port ${BE_PORT}
+    depends_on:
+      - db
+
+volumes:
+  db_data:

@@ -54,8 +54,6 @@ async def login(user: UserLogInSchema):
         # httponly=True,
         max_age=1800,
         expires=1800,
-        samesite="None",
-        secure=True,
     )
 
     return response
@@ -80,8 +78,6 @@ async def logout():
         # httponly=True,
         max_age=1800,
         expires=1,
-        samesite="None",
-        secure=True,
     )
 
     return response
