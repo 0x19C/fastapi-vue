@@ -17,3 +17,7 @@ docker exec -it corpy_backend python src/database/ensure_db.py
 docker exec -it corpy_backend aerich upgrade
 ```
 
+### DB Seed
+```
+docker exec -it corpy_backend python src/database/seed.py
+```
