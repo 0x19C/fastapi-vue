@@ -2,7 +2,7 @@ import asyncio
 import os
 
 from tortoise import Tortoise
-from .models import Users  # Make sure to import your models here
+from src.database.models import Users  # Make sure to import your models here
 from passlib.context import CryptContext
 
 async def run():
