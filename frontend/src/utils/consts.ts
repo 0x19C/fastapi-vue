@@ -11,6 +11,7 @@ export default {
         // "Includes at least one special character (e.g., !@#$%^&*())",
       ],
       PASSWORDNOTMATCHED: "Confirm password is not matched.",
+      EMPTYFILES: "Please select at least one file.",
     },
   },
 };
