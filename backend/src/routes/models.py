@@ -20,7 +20,7 @@ from src.auth.jwthandler import (
 router = APIRouter(tags=["Models"])
 
 @router.post(
-    "/modles", response_model=ModelOutSchema, dependencies=[Depends(get_current_user)]
+    "/models", response_model=ModelOutSchema, dependencies=[Depends(get_current_user)]
 )
 async def create_model(
     name: str,
