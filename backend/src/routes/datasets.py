@@ -99,9 +99,9 @@ async def dataset_detail(dataset_id: int, current_user: UserOutSchema = Depends(
 async def delete_dataset(
     dataset_id: int, current_user: UserOutSchema = Depends(get_current_user)
 ) -> Status:
-    # if not current_user.is_admin:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_403_FORBIDDEN,
-    #         detail="You are not admin!",
-    #     )
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not admin!",
+        )
     return await crud.delete_dataset(dataset_id)
