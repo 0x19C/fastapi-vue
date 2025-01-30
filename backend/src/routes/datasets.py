@@ -37,7 +37,8 @@ async def create_dataset(
 ) -> DataSetOutSchema:
     directory_name = str(uuid.uuid4())
     dataset_path = UPLOAD_DIR + "/" + directory_name
-    os.mkdir(dataset_path)
+    if not os.path.exists(dataset_path):
+        os.mkdir(dataset_path)
 
     images = []
     for idx, file in enumerate(files):
