@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Form
 
 from typing import List
 from tortoise.contrib.fastapi import HTTPNotFoundError
@@ -23,7 +23,7 @@ router = APIRouter(tags=["Models"])
     "/models", response_model=ModelOutSchema, dependencies=[Depends(get_current_user)]
 )
 async def create_model(
-    name: str,
+    name: str = Form(...),
     current_user: UserOutSchema = Depends(get_current_user)
 ) -> ModelOutSchema:
     return await crud.create_model(ModelInSchema.model_validate({

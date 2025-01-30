@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Form
 
 from typing import List
 from tortoise.exceptions import DoesNotExist
@@ -23,8 +23,8 @@ router = APIRouter(tags=["Trainings"])
     "/trainings", response_model=List[TrainingOutSchema], dependencies=[Depends(get_current_user)]
 )
 async def generate_training(
-    model_id: int = Query(...),
-    dataset_ids: List[int] = Query(...),
+    model_id: int = Form(...),
+    dataset_ids: List[int] = Form(...),
     current_user: UserOutSchema = Depends(get_current_user)
 ) -> List[TrainingOutSchema]:
     try:

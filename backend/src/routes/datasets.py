@@ -8,8 +8,6 @@ from typing import List
 from tortoise.contrib.fastapi import HTTPNotFoundError
 from tortoise.exceptions import DoesNotExist
 
-from PIL import Image
-
 import src.crud.datasets as crud
 
 from src.schemas.token import Status
@@ -22,6 +20,7 @@ from src.auth.jwthandler import (
     get_current_user,
 )
 
+from src.module.image import get_image_metadata
 
 router = APIRouter(tags=["Datasets"])
 
@@ -46,8 +45,7 @@ async def create_dataset(
         with open(file_path, "wb") as buffer:
             readable_file = await file.read()
             buffer.write(readable_file)
-            img = Image.open(io.BytesIO(readable_file))
-            metadata = img._getexif()
+            metadata = await get_image_metadata(io.BytesIO(readable_file))
         images.append({
             "name": file.filename,
             "file_path": file_path,
