@@ -10,7 +10,7 @@
         <fwb-navbar-link class="py-2" is-active link="#">
           Home
         </fwb-navbar-link>
-        <fwb-navbar-link class="py-2" link="#"> Services </fwb-navbar-link>
+        <fwb-navbar-link class="py-2" link="/dataset"> Dataset </fwb-navbar-link>
         <fwb-navbar-link class="py-2" link="#"> Pricing </fwb-navbar-link>
         <fwb-navbar-link class="py-2" link="#"> Contact </fwb-navbar-link>
         <fwb-dropdown :text="username" align-to-end>

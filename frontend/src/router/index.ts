@@ -9,6 +9,7 @@ import LoginPage from "@/pages/Login.vue";
 import DashboardPage from "@/pages/Dashboard.vue";
 import RegisterPage from "@/pages/Register.vue";
 import NotFoundPage from "@/pages/NotFound.vue";
+import DatasetPage from "@/pages/Dataset.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -28,6 +29,12 @@ const router = createRouter({
       path: "/register",
       name: "register",
       component: RegisterPage,
+    },
+    {
+      path: "/dataset",
+      name: "dataset",
+      component: DatasetPage,
+      meta: { requiresAuth: true },
     },
     // Wildcard route to handle undefined routes (404)
     {
