@@ -11,10 +11,10 @@ async def run():
         db_url=os.environ.get("DATABASE_URL", "mysql://root@localhost:3306/corpy_test"),
         modules={'models': ['src.database.models']}
     )
-    
+
     # Generate the schema (create tables if they don't exist)
     await Tortoise.generate_schemas()
-    
+
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     # Check if the admin user already exists
@@ -30,7 +30,7 @@ async def run():
         print(f"Admin user created: {admin_user.username}")
     else:
         print("Admin user already exists.")
-    
+
     # Close the database connection
     await Tortoise.close_connections()
 
