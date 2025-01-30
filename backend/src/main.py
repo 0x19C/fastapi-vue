@@ -2,6 +2,8 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from fastapi.staticfiles import StaticFiles
+
 from src.database.register import register_tortoise
 from src.database.config import TORTOISE_ORM
 
@@ -22,6 +24,8 @@ register_tortoise(app, config=TORTOISE_ORM, generate_schemas=False)
 
 app.include_router(users.router)
 app.include_router(datasets.router)
+
+app.mount("/storage", StaticFiles(directory="storage"), name="storage")
 
 @app.get("/")
 def home():
