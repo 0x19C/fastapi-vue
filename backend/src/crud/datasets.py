@@ -1,3 +1,6 @@
+import shutil
+import os
+
 from fastapi import HTTPException, status
 from typing import List
 
@@ -26,7 +29,9 @@ async def create_dataset(dataset: DataSetInSchema, images: List[ImageInSchema]) 
 
 async def delete_dataset(dataset_id) -> Status:
     try:
-        await DataSetOutSchema.from_queryset_single(DataSets.get(id=dataset_id))
+        dataset = await DataSetOutSchema.from_queryset_single(DataSets.get(id=dataset_id))
+        if os.path.exists(dataset.directory_path):
+            shutil.rmtree(dataset.directory_path)
     except DoesNotExist as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Dataset {dataset_id} is not found!") from e
 

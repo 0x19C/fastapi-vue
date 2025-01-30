@@ -18,7 +18,7 @@ class DataSets(models.Model):
     user = fields.ForeignKeyField("models.Users", related_name="user_datasets")
     sample_count = fields.IntField()
     metadata = fields.JSONField(null=True)
-    parent = fields.ForeignKeyField("models.DataSets", related_name="parents", null=True)
+    parent = fields.ForeignKeyField("models.DataSets", related_name="children", null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
 
@@ -36,6 +36,8 @@ class Images(models.Model):
 class Models(models.Model):
     id = fields.IntField(pk=True)
     name = fields.CharField(max_length=255, unique=True)
+    user = fields.ForeignKeyField("models.Users", related_name="user_models")
+    parent = fields.ForeignKeyField("models.Models", related_name="children", null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
 
