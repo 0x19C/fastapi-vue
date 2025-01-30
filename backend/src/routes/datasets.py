@@ -8,8 +8,6 @@ from typing import List
 from tortoise.contrib.fastapi import HTTPNotFoundError
 from tortoise.exceptions import DoesNotExist
 
-from PIL import Image
-
 import src.crud.datasets as crud
 
 from src.schemas.token import Status
@@ -22,13 +20,15 @@ from src.auth.jwthandler import (
     get_current_user,
 )
 
+from src.module.image import get_image_metadata
 
 router = APIRouter(tags=["Datasets"])
 
 UPLOAD_DIR="./storage/datasets"
 
 @router.post(
-    "/datasets", response_model=DataSetOutSchema, dependencies=[Depends(get_current_user)]
+    "/datasets", response_model=DataSetOutSchema, dependencies=[Depends(get_current_user)],
+    summary="Create new dataset by uploading images.",
 )
 async def create_dataset(
     name: str = Form(None),
@@ -46,8 +46,7 @@ async def create_dataset(
         with open(file_path, "wb") as buffer:
             readable_file = await file.read()
             buffer.write(readable_file)
-            img = Image.open(io.BytesIO(readable_file))
-            metadata = img._getexif()
+            metadata = await get_image_metadata(io.BytesIO(readable_file))
         images.append({
             "name": file.filename,
             "file_path": file_path,
@@ -68,7 +67,8 @@ async def create_dataset(
 
 
 @router.get(
-    "/datasets", response_model=List[DataSetOutSchema], dependencies=[Depends(get_current_user)]
+    "/datasets", response_model=List[DataSetOutSchema], dependencies=[Depends(get_current_user)],
+    summary="List your own datasets. If you are admin, you can list whole datasets in this system.",
 )
 async def dataset_list(current_user: UserOutSchema = Depends(get_current_user)) -> List[DataSetOutSchema]:
     if current_user.is_admin:
@@ -77,7 +77,8 @@ async def dataset_list(current_user: UserOutSchema = Depends(get_current_user)) 
 
 
 @router.get(
-    "/datasets/{dataset_id}", response_model=DataSetOutSchema, dependencies=[Depends(get_current_user)]
+    "/datasets/{dataset_id}", response_model=DataSetOutSchema, dependencies=[Depends(get_current_user)],
+    summary="Get your own special dataset. If you are admin, you can get anyone's dataset."
 )
 async def dataset_detail(dataset_id: int, current_user: UserOutSchema = Depends(get_current_user)) -> DataSetOutSchema:
     try:
@@ -96,6 +97,7 @@ async def dataset_detail(dataset_id: int, current_user: UserOutSchema = Depends(
     response_model=Status,
     responses={404: {"model": HTTPNotFoundError}},
     dependencies=[Depends(get_current_user)],
+    summary="Only admin can remove special dataset."
 )
 async def delete_dataset(
     dataset_id: int, current_user: UserOutSchema = Depends(get_current_user)
