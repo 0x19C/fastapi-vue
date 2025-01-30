@@ -23,7 +23,7 @@ from src.auth.jwthandler import (
 )
 
 
-router = APIRouter()
+router = APIRouter(tags=["Datasets"])
 
 UPLOAD_DIR="./storage/datasets"
 

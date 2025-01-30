@@ -17,7 +17,7 @@ from src.auth.jwthandler import (
 )
 
 
-router = APIRouter()
+router = APIRouter(tags=["Models"])
 
 @router.post(
     "/modles", response_model=ModelOutSchema, dependencies=[Depends(get_current_user)]
