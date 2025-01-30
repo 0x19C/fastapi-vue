@@ -21,12 +21,15 @@ from src.auth.jwthandler import (
 router = APIRouter(tags=["Users"])
 
 
-@router.post("/register", response_model=UserOutSchema)
+@router.post(
+    "/register", response_model=UserOutSchema,
+    summary="Register user by username, email and password. The default created user is not admin."
+)
 async def create_user(user: UserInSchema) -> UserOutSchema:
     return await crud.create_user(user)
 
 
-@router.post("/login")
+@router.post("/login", summary="Login with email and password.")
 async def login(user: UserLogInSchema):
     user = await validate_user(user)
 
@@ -60,7 +63,8 @@ async def login(user: UserLogInSchema):
 
 
 @router.get(
-    "/users/whoami", response_model=UserOutSchema, dependencies=[Depends(get_current_user)]
+    "/users/whoami", response_model=UserOutSchema, dependencies=[Depends(get_current_user)],
+    summary="Check who is sent this request by analyzing the cookie."
 )
 async def read_users_me(current_user: UserOutSchema = Depends(get_current_user)):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -83,7 +87,7 @@ async def read_users_me(current_user: UserOutSchema = Depends(get_current_user))
     return response
 
 
-@router.post("/logout")
+@router.post("/logout", summary="Your logout.")
 async def logout():
     content = {
         "message": "You've successfully logged out. See you later!"
@@ -105,6 +109,7 @@ async def logout():
     response_model=Status,
     responses={404: {"model": HTTPNotFoundError}},
     dependencies=[Depends(get_current_user)],
+    summary="Only admin can remove special user."
 )
 async def delete_user(
     user_id: int, current_user: UserOutSchema = Depends(get_current_user)

@@ -20,7 +20,8 @@ from src.auth.jwthandler import (
 router = APIRouter(tags=["Models"])
 
 @router.post(
-    "/models", response_model=ModelOutSchema, dependencies=[Depends(get_current_user)]
+    "/models", response_model=ModelOutSchema, dependencies=[Depends(get_current_user)],
+    summary="Create a model by setting your own special model name."
 )
 async def create_model(
     name: str = Form(...),
@@ -34,7 +35,8 @@ async def create_model(
 
 
 @router.get(
-    "/models", response_model=List[ModelOutSchema], dependencies=[Depends(get_current_user)]
+    "/models", response_model=List[ModelOutSchema], dependencies=[Depends(get_current_user)],
+    summary="List your own models. If you are admin, you can see whole models in this system."
 )
 async def model_list(current_user: UserOutSchema = Depends(get_current_user)) -> List[ModelOutSchema]:
     if current_user.is_admin:
@@ -43,7 +45,8 @@ async def model_list(current_user: UserOutSchema = Depends(get_current_user)) ->
 
 
 @router.get(
-    "/models/{model_id}", response_model=ModelOutSchema, dependencies=[Depends(get_current_user)]
+    "/models/{model_id}", response_model=ModelOutSchema, dependencies=[Depends(get_current_user)],
+    summary="Get your own special model. If you are admin, you can see anyone's model."
 )
 async def model_detail(model_id: int, current_user: UserOutSchema = Depends(get_current_user)) -> ModelOutSchema:
     try:
@@ -62,6 +65,7 @@ async def model_detail(model_id: int, current_user: UserOutSchema = Depends(get_
     response_model=Status,
     responses={404: {"model": HTTPNotFoundError}},
     dependencies=[Depends(get_current_user)],
+    summary="Only admin can remove special model."
 )
 async def delete_model(
     model_id: int, current_user: UserOutSchema = Depends(get_current_user)

@@ -27,7 +27,8 @@ router = APIRouter(tags=["Datasets"])
 UPLOAD_DIR="./storage/datasets"
 
 @router.post(
-    "/datasets", response_model=DataSetOutSchema, dependencies=[Depends(get_current_user)]
+    "/datasets", response_model=DataSetOutSchema, dependencies=[Depends(get_current_user)],
+    summary="Create new dataset by uploading images.",
 )
 async def create_dataset(
     name: str = Form(None),
@@ -66,7 +67,8 @@ async def create_dataset(
 
 
 @router.get(
-    "/datasets", response_model=List[DataSetOutSchema], dependencies=[Depends(get_current_user)]
+    "/datasets", response_model=List[DataSetOutSchema], dependencies=[Depends(get_current_user)],
+    summary="List your own datasets. If you are admin, you can list whole datasets in this system.",
 )
 async def dataset_list(current_user: UserOutSchema = Depends(get_current_user)) -> List[DataSetOutSchema]:
     if current_user.is_admin:
@@ -75,7 +77,8 @@ async def dataset_list(current_user: UserOutSchema = Depends(get_current_user)) 
 
 
 @router.get(
-    "/datasets/{dataset_id}", response_model=DataSetOutSchema, dependencies=[Depends(get_current_user)]
+    "/datasets/{dataset_id}", response_model=DataSetOutSchema, dependencies=[Depends(get_current_user)],
+    summary="Get your own special dataset. If you are admin, you can get anyone's dataset."
 )
 async def dataset_detail(dataset_id: int, current_user: UserOutSchema = Depends(get_current_user)) -> DataSetOutSchema:
     try:
@@ -94,6 +97,7 @@ async def dataset_detail(dataset_id: int, current_user: UserOutSchema = Depends(
     response_model=Status,
     responses={404: {"model": HTTPNotFoundError}},
     dependencies=[Depends(get_current_user)],
+    summary="Only admin can remove special dataset."
 )
 async def delete_dataset(
     dataset_id: int, current_user: UserOutSchema = Depends(get_current_user)

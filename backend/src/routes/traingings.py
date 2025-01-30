@@ -20,7 +20,8 @@ from src.module.ai import ai_training_process
 router = APIRouter(tags=["Trainings"])
 
 @router.post(
-    "/trainings", response_model=List[TrainingOutSchema], dependencies=[Depends(get_current_user)]
+    "/trainings", response_model=List[TrainingOutSchema], dependencies=[Depends(get_current_user)],
+    summary="Start training for your own special model with some datasets."
 )
 async def generate_training(
     model_id: int = Form(...),
@@ -45,7 +46,8 @@ async def generate_training(
 
 
 @router.get(
-    "/trainings", response_model=List[TrainingOutSchema], dependencies=[Depends(get_current_user)]
+    "/trainings", response_model=List[TrainingOutSchema], dependencies=[Depends(get_current_user)],
+    summary="List training logs for your own models. If you are admin, you can see whole training logs in this system."
 )
 async def training_list(current_user: UserOutSchema = Depends(get_current_user)) -> List[TrainingOutSchema]:
     if current_user.is_admin:
@@ -54,7 +56,8 @@ async def training_list(current_user: UserOutSchema = Depends(get_current_user))
 
 
 @router.get(
-    "/trainings/{training_id}", response_model=TrainingOutSchema, dependencies=[Depends(get_current_user)]
+    "/trainings/{training_id}", response_model=TrainingOutSchema, dependencies=[Depends(get_current_user)],
+    summary="Get special training log for your own model. If you are admin, you can see any training log."
 )
 async def model_detail(training_id: int, current_user: UserOutSchema = Depends(get_current_user)) -> TrainingOutSchema:
     try:
