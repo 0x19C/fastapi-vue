@@ -85,7 +85,7 @@ async def dataset_detail(dataset_id: int, current_user: UserOutSchema = Depends(
         return await DataSetOutSchema.from_queryset_single(DataSets.get(id=dataset_id, user_id=current_user.id))
     except DoesNotExist as e:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="Dataset does not exist!",
         ) from e
 
