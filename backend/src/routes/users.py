@@ -18,7 +18,7 @@ from src.auth.jwthandler import (
 )
 
 
-router = APIRouter()
+router = APIRouter(tags=["Users"])
 
 
 @router.post("/register", response_model=UserOutSchema)
@@ -63,7 +63,24 @@ async def login(user: UserLogInSchema):
     "/users/whoami", response_model=UserOutSchema, dependencies=[Depends(get_current_user)]
 )
 async def read_users_me(current_user: UserOutSchema = Depends(get_current_user)):
-    return current_user
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": current_user.email}, expires_delta=access_token_expires
+    )
+    token = jsonable_encoder(access_token)
+    response = JSONResponse(content={
+        "username": current_user.username,
+        "email": current_user.email,
+    })
+    response.set_cookie(
+        "Authorization",
+        value=f"Bearer {token}",
+        # httponly=True,
+        max_age=1800,
+        expires=1800,
+    )
+
+    return response
 
 
 @router.post("/logout")
@@ -84,7 +101,7 @@ async def logout():
 
 
 @router.delete(
-    "/user/{user_id}",
+    "/users/{user_id}",
     response_model=Status,
     responses={404: {"model": HTTPNotFoundError}},
     dependencies=[Depends(get_current_user)],
@@ -92,4 +109,9 @@ async def logout():
 async def delete_user(
     user_id: int, current_user: UserOutSchema = Depends(get_current_user)
 ) -> Status:
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not admin!",
+        )
     return await crud.delete_user(user_id, current_user)

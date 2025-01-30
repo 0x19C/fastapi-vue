@@ -27,7 +27,3 @@ app.include_router(datasets.router)
 app.include_router(models.router)
 
 app.mount("/storage", StaticFiles(directory="storage"), name="storage")
-
-@app.get("/")
-def home():
-    return "Hello, World!"
