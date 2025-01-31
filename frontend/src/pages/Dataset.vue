@@ -16,7 +16,7 @@
     <fwb-button @click="saveFiles" class="btn btn-primary mt-4">Save</fwb-button>
 
     <div v-if="files.length !== 0" class="mt-4 border-[1px] border-gray-300 dark:border-gray-600 p-2 rounded-md">
-      <div v-for="file in files" :key="file">
+      <div v-for="file in files" :key="file.name">
         {{ file.name }}
       </div>
     </div>
@@ -68,7 +68,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const listData = ref();
-const files = ref([]);
+const files = ref<File[]>([]);
 const name = ref("");
 const loading = ref(false);
 const store = useImageStore();
@@ -78,7 +78,7 @@ const goDetail = async (id: number) => {
   router.push(`/dataset/${id}`);
 }
 
-const transformImages = (images) => {
+const transformImages = (images: {file_path: string}[]) => {
   return images.map(item => ({
     src: `${import.meta.env.VITE_API_ENDPOINT}/${item.file_path}`
   }));

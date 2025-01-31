@@ -26,7 +26,7 @@ const imagePath = ref();
 const notificationStore = useNotificationStore();
 
 const fetchData = async () => {
-  const id = route.params.id;
+  const id = Number(route.params.id);
   store.getDetail(id).then((res) => {
     detailData.value = res;
     imagePath.value = `${import.meta.env.VITE_API_ENDPOINT}/${detailData.value.directory_path}/thumbnail.png`

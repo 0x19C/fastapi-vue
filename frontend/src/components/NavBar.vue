@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue/dist/vue.d.mts";
+import { computed } from "vue/dist/vue.d.mts";
 import {
   FwbA,
   FwbAlert,
