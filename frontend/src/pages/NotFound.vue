@@ -5,4 +5,3 @@
     <router-link class="block mt-5 text-blue-600 hover:underline" to="/">Go back to the home page</router-link>
   </div>
 </template>
-

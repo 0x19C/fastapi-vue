@@ -34,7 +34,6 @@ import { ref, onMounted } from "vue/dist/vue.d.mts";
 import {
   FwbButton,
   FwbInput,
-  FwbModal,
   FwbTable,
   FwbTableBody,
   FwbTableCell,

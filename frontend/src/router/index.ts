@@ -12,6 +12,9 @@ import NotFoundPage from "@/pages/NotFound.vue";
 import DatasetPage from "@/pages/Dataset.vue";
 import ModelPage from "@/pages/Model.vue";
 import ModelDetail from "@/pages/ModelDetail.vue";
+import DatasetDetail from "@/pages/DatasetDetail.vue";
+import TrainingPage from "@/pages/Training.vue";
+import TrainingDetail from "@/pages/TrainingDetail.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -39,6 +42,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/dataset/:id",
+      name: "dataset_detail",
+      component: DatasetDetail,
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/model",
       name: "model",
       component: ModelPage,
@@ -48,6 +57,18 @@ const router = createRouter({
       path: "/model/:id",
       name: "model_detail",
       component: ModelDetail,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/training",
+      name: "training",
+      component: TrainingPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/training/:id",
+      name: "training_detail",
+      component: TrainingDetail,
       meta: { requiresAuth: true },
     },
     // Wildcard route to handle undefined routes (404)

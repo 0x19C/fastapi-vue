@@ -1,18 +1,17 @@
 <template>
   <fwb-navbar>
     <template #logo>
-      <fwb-navbar-logo alt="Flowbite logo" image-url="/logo.svg" link="/">
-        Flowbite
+      <fwb-navbar-logo alt="Flowbite logo" image-url="/login.png" link="/">
       </fwb-navbar-logo>
     </template>
     <template #default="{ isShowMenu }">
       <fwb-navbar-collapse v-if="isLoggedIn" :is-show-menu="isShowMenu">
-        <fwb-navbar-link class="py-2" is-active link="#">
+        <fwb-navbar-link class="py-2" is-active link="/">
           Home
         </fwb-navbar-link>
         <fwb-navbar-link class="py-2" link="/dataset"> Dataset </fwb-navbar-link>
         <fwb-navbar-link class="py-2" link="/model"> Model </fwb-navbar-link>
-        <fwb-navbar-link class="py-2" link="#"> Contact </fwb-navbar-link>
+        <fwb-navbar-link class="py-2" link="/training"> Training </fwb-navbar-link>
         <fwb-dropdown :text="username" align-to-end>
           <fwb-list-group class="w-20">
             <fwb-list-group-item>
@@ -45,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue/dist/vue.d.mts";
+import { ref, computed, onMounted } from "vue/dist/vue.d.mts";
 import {
   FwbA,
   FwbAlert,

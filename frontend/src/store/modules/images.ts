@@ -31,6 +31,18 @@ export const useImageStore = defineStore("image", () => {
       });
   };
 
+  const getDetail = async (id: number) => {
+    return await axios
+      .get(`${import.meta.env.VITE_API_ENDPOINT}/datasets/${id}`)
+      .then((res) => {
+        return res.data as DataSet;
+      })
+      .catch((e) => {
+        console.log(e);
+        return null;
+      });
+  };
+
   const upload = async (
     formData: FormData
   ) => {
@@ -39,6 +51,51 @@ export const useImageStore = defineStore("image", () => {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          return {
+            message: "You've successfully created datasets.",
+            type: "success" as AlertType,
+          };
+        } else {
+          return {
+            message: res.data.message,
+            type: "warning" as AlertType,
+          };
+        }
+      })
+      .catch(
+        ({
+          status,
+          message,
+          response: {
+            data: { detail },
+          },
+        }) => {
+          if (status >= 400 && status < 500) {
+            return {
+              message: detail,
+              type: "warning" as AlertType,
+            };
+          }
+          return {
+            message: message,
+            type: "danger" as AlertType,
+          };
+        }
+      );
+  };
+
+  const addOper = async (
+    dataset_id: number,
+    brightness: number,
+    noise: number
+  ) => {
+    return await axios
+      .post(`${import.meta.env.VITE_API_ENDPOINT}/datasets/${dataset_id}`, {
+        brightness: Number(brightness),
+        noise: Number(noise)
       })
       .then((res) => {
         if (res.status === 200) {
@@ -117,7 +174,9 @@ export const useImageStore = defineStore("image", () => {
 
   return {
     getList,
+    getDetail,
     upload,
+    addOper,
     destroy
   };
 });
