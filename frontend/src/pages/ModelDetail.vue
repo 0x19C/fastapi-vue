@@ -27,7 +27,7 @@ const datasetOptions = ref();
 const notificationStore = useNotificationStore();
 
 const fetchData = async () => {
-  const id = route.params.id;
+  const id = Number(route.params.id);
   store.getDetail(id).then((res) => {
     detailData.value = res;
   });

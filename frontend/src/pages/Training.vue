@@ -28,8 +28,6 @@
 import { ref, onMounted } from "vue/dist/vue.d.mts";
 import {
   FwbButton,
-  FwbInput,
-  FwbFileInput,
   FwbTable,
   FwbTableBody,
   FwbTableCell,

@@ -36,7 +36,7 @@ const detailData = ref();
 const store = useTrainingStore();
 
 const fetchData = () => {
-  const id = route.params.id;
+  const id = Number(route.params.id);
   store.getDetail(id).then((res) => {
     detailData.value = res;
   });
