@@ -64,8 +64,8 @@ def clone_dataset_with_images(origin_directory: str, target_directory: str, brig
             img_enhanced = enhancer.enhance(brightness / 100).convert("RGB")
 
             # Add Gaussian Noise
-            noise = Image.effect_noise((img_enhanced.width, img_enhanced.height), noise).convert("RGB")
-            noisy_image = ImageChops.add(img_enhanced, noise)
+            noise_img = Image.effect_noise((img_enhanced.width, img_enhanced.height), noise).convert("RGB")
+            noisy_image = ImageChops.add(img_enhanced, noise_img)
 
             noisy_image.save(os.path.join(target_directory, image_name))
 
