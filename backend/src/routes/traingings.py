@@ -5,7 +5,7 @@ from tortoise.exceptions import DoesNotExist
 
 import src.crud.trainings as crud
 
-from src.schemas.trainings import TrainingInSchema, TrainingOutSchema
+from src.schemas.trainings import TrainingInSchema, TrainingOutSchema, TrainingRequest
 from src.schemas.users import UserOutSchema
 
 from src.database.models import Trainings, Models
@@ -24,23 +24,22 @@ router = APIRouter(tags=["Trainings"])
     summary="Start training for your own special model with some datasets."
 )
 async def generate_training(
-    model_id: int = Form(...),
-    dataset_ids: List[int] = Form(...),
+    req: TrainingRequest,
     current_user: UserOutSchema = Depends(get_current_user)
 ) -> List[TrainingOutSchema]:
     try:
         if current_user.is_admin:
-            model = await Models.get(id=model_id)
-        model = await Models.get(id=model_id, user_id=current_user.id)
+            model = await Models.get(id=req.model_id)
+        model = await Models.get(id=req.model_id, user_id=current_user.id)
     except DoesNotExist as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Model {model_id} does not exist!",
+            detail=f"Model {req.model_id} does not exist!",
         ) from e
 
     result = []
-    for dataset_id in dataset_ids:
-        training_result = await ai_training_process(model_id, dataset_id)
+    for dataset_id in req.dataset_ids:
+        training_result = await ai_training_process(req.model_id, dataset_id)
         result.append(await crud.create_training(TrainingInSchema.model_validate(training_result)))
     return result
 

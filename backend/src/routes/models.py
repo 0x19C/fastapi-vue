@@ -7,7 +7,7 @@ from tortoise.exceptions import DoesNotExist
 import src.crud.models as crud
 
 from src.schemas.token import Status
-from src.schemas.models import ModelInSchema, ModelOutSchema
+from src.schemas.models import ModelInSchema, ModelOutSchema, ModelRequest
 from src.schemas.users import UserOutSchema
 
 from src.database.models import Models
@@ -24,11 +24,11 @@ router = APIRouter(tags=["Models"])
     summary="Create a model by setting your own special model name."
 )
 async def create_model(
-    name: str = Form(...),
+    req: ModelRequest,
     current_user: UserOutSchema = Depends(get_current_user)
 ) -> ModelOutSchema:
     return await crud.create_model(ModelInSchema.model_validate({
-        "name": name,
+        "name": req.name,
         "user_id": current_user.id,
         "parent_id": None,
     }))

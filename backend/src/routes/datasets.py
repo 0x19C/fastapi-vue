@@ -11,7 +11,7 @@ from tortoise.exceptions import DoesNotExist
 import src.crud.datasets as crud
 
 from src.schemas.token import Status
-from src.schemas.datasets import DataSetInSchema, DataSetOutSchema, ImageInSchema
+from src.schemas.datasets import DataSetInSchema, DataSetOutSchema, ImageInSchema, DatasetCloneRequest
 from src.schemas.users import UserOutSchema
 
 from src.database.models import DataSets
@@ -74,8 +74,7 @@ async def create_dataset(
 )
 async def clone_dataset(
     dataset_id: int,
-    brightness: float = Form(...),
-    noise: float = Form(...),
+    req: DatasetCloneRequest,
     current_user: UserOutSchema = Depends(get_current_user)
 ) -> DataSetOutSchema:
     try:
@@ -93,7 +92,7 @@ async def clone_dataset(
     if not os.path.exists(dataset_path):
         os.mkdir(dataset_path)
     
-    images = clone_dataset_with_images(dataset.directory_path, dataset_path, brightness, noise)
+    images = clone_dataset_with_images(dataset.directory_path, dataset_path, req.brightness, req.noise)
 
     return await crud.create_dataset(DataSetInSchema.model_validate({
         "name": directory_name,
