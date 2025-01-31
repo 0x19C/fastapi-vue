@@ -1,7 +1,13 @@
 from tortoise.contrib.pydantic import pydantic_model_creator
 
+from pydantic import BaseModel
+
 from src.database.models import Models
 from src.schemas.users import UserOutSchema
+
+
+class ModelRequest(BaseModel):
+    name: str
 
 
 ModelInSchema = pydantic_model_creator(

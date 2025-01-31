@@ -1,8 +1,15 @@
 from tortoise.contrib.pydantic import pydantic_model_creator
 from typing import List
 
+from pydantic import BaseModel
+
 from src.database.models import DataSets, Images
 from src.schemas.users import UserOutSchema
+
+
+class DatasetCloneRequest(BaseModel):
+    brightness: float
+    noise: float
 
 
 DataSetInSchema = pydantic_model_creator(

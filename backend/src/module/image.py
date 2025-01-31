@@ -16,7 +16,7 @@ def generate_thumbnail_of_dataset(directory, target_height=128):
         return
     if not os.listdir(directory):
         return
-    images = [__get_thumbnail_of_image(os.path.join(directory, filename), target_height) for filename in os.listdir(directory) if filename != "thumbnail.png"]
+    images = [__get_thumbnail_of_image(os.path.join(directory, filename), target_height) for filename in os.listdir(directory) if filename.split('/')[-1] != "thumbnail.png"]
 
     total_width = sum(img.width for img in images)
     combined_image = Image.new("RGB", (total_width, target_height))
@@ -70,9 +70,9 @@ def clone_dataset_with_images(origin_directory: str, target_directory: str, brig
             noisy_image.save(os.path.join(target_directory, image_name))
 
             # Get metadata
-            if img.filename != "thumbnail.png":
+            if img.filename.split('/')[-1] != "thumbnail.png":
                 images.append({
-                    "name": img.filename,
+                    "name": img.filename.split('/')[-1],
                     "file_path": os.path.join(target_directory, image_name),
                     "metadata": __parse_image_metadata(noisy_image)
                 })
