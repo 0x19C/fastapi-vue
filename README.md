@@ -1,5 +1,7 @@
 # Build Services
 
+If you want to change Service hosts or ports, please edit on .env-docker file.
+
 ```
 cp .env-docker .env
 docker-compose up -d
