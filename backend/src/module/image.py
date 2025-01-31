@@ -74,6 +74,6 @@ def clone_dataset_with_images(origin_directory: str, target_directory: str, brig
                 images.append({
                     "name": img.filename,
                     "file_path": os.path.join(target_directory, image_name),
-                    "metadata": __parse_image_metadata(img_enhanced)
+                    "metadata": __parse_image_metadata(noisy_image)
                 })
     return images
