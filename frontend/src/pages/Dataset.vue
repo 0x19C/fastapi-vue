@@ -85,12 +85,6 @@ const isModalOpen = ref(false);
 const store = useImageStore();
 const notificationStore = useNotificationStore();
 
-const pictures = [
-  {src: '/login.png'},
-  {src: '/login.png'},
-  {src: '/login.png'},
-];
-
 const detailModal = () => {
   isModalOpen.value = true;
 };
