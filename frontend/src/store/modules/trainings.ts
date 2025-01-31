@@ -2,9 +2,11 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import type { AlertType } from "flowbite-vue/components/FwbAlert/types.js";
 
-interface Model {
+interface Training {
   id: number;
-  name: string;
+  experiment_name: string;
+  precision: number;
+  recall: number;
 }
 
 axios.defaults.withCredentials = true;
@@ -12,9 +14,9 @@ axios.defaults.withCredentials = true;
 export const useTrainingStore = defineStore("training", () => {
   const getList = async () => {
     return await axios
-      .get(`${import.meta.env.VITE_API_ENDPOINT}/models`)
+      .get(`${import.meta.env.VITE_API_ENDPOINT}/trainings`)
       .then((res) => {
-        return res.data as Model[];
+        return res.data as Training[];
       })
       .catch((e) => {
         console.log(e);
@@ -24,9 +26,9 @@ export const useTrainingStore = defineStore("training", () => {
 
   const getDetail = async (id: number) => {
     return await axios
-      .get(`${import.meta.env.VITE_API_ENDPOINT}/models/${id}`)
+      .get(`${import.meta.env.VITE_API_ENDPOINT}/trainings/${id}`)
       .then((res) => {
-        return res.data as Model;
+        return res.data as Training;
       })
       .catch((e) => {
         console.log(e);

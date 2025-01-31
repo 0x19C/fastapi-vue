@@ -39,23 +39,12 @@
         <fwb-table-cell>{{ data.name }}</fwb-table-cell>
         <fwb-table-cell>{{ data.sample_count }}</fwb-table-cell>
         <fwb-table-cell>
-          <fwb-button @click="detailModal" class="btn bg-blue-700">Detail</fwb-button>
+          <fwb-button @click="goDetail(data.id)" class="btn bg-blue-700">Detail</fwb-button>
           <fwb-button @click="destroy(data.id)" class="btn bg-red-700 ml-3">Delete</fwb-button>
         </fwb-table-cell>
       </fwb-table-row>
     </fwb-table-body>
   </fwb-table>
-  <fwb-modal v-if="isModalOpen" size="5xl" @close="closeModal">
-    <template #header>
-      <h3 class="text-lg font-semibold">Modal Title</h3>
-    </template>
-    <template #body>
-      <p>This is the content inside the modal.</p>
-    </template>
-    <template #footer>
-      <fwb-button @click="closeModal">Close</fwb-button>
-    </template>
-  </fwb-modal>
 </template>
 
 <script setup lang="ts">
@@ -64,7 +53,6 @@ import {
   FwbButton,
   FwbInput,
   FwbFileInput,
-  FwbModal,
   FwbTable,
   FwbTableBody,
   FwbTableCell,
@@ -76,22 +64,19 @@ import {
 import { useImageStore } from "@/store/modules/images";
 import { useNotificationStore } from "@/store/modules/notifications";
 import CONST from "@/utils/consts";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const listData = ref();
 const files = ref([]);
 const name = ref("");
 const loading = ref(false);
-const isModalOpen = ref(false);
 const store = useImageStore();
 const notificationStore = useNotificationStore();
 
-const detailModal = () => {
-  isModalOpen.value = true;
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
-};
+const goDetail = async (id: number) => {
+  router.push(`/dataset/${id}`);
+}
 
 const transformImages = (images) => {
   return images.map(item => ({
