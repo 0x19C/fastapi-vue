@@ -20,7 +20,7 @@ from src.auth.jwthandler import (
     get_current_user,
 )
 
-from src.module.image import get_image_metadata, clone_image, generate_thumbnail_of_dataset
+from src.module.image import get_image_metadata, generate_thumbnail_of_dataset, clone_dataset_with_images
 
 router = APIRouter(tags=["Datasets"])
 
@@ -90,38 +90,22 @@ async def clone_dataset(
 
     directory_name = str(uuid.uuid4())
     dataset_path = f"{UPLOAD_DIR}/{directory_name}"
-    # if not os.path.exists(dataset_path):
-    #     os.mkdir(dataset_path)
+    if not os.path.exists(dataset_path):
+        os.mkdir(dataset_path)
+    
+    images = clone_dataset_with_images(dataset.directory_path, dataset_path, brightness, noise)
 
-    images = []
-    for idx, image in enumerate(dataset.dataset_images):
-        origin_file_path = image.file_path
-        clone_image(origin_file_path, brightness, noise)
-
-        file_path = f"{dataset_path}/{brightness}_{noise}_{str(idx)}-{image.name}"
-        # with open(origin_file_path, "rb") as file:
-        #     with open(file_path, "wb") as buffer:
-        #         readable_file = file.read()
-        #         buffer.write(readable_file)
-        #         metadata = await get_image_metadata(io.BytesIO(readable_file))
-        # images.append({
-        #     "name": file.filename,
-        #     "file_path": file_path,
-        #     "metadata": metadata
-        # })
-    return dataset
-
-    # return await crud.create_dataset(DataSetInSchema.model_validate({
-    #     "name": directory_name,
-    #     "directory_path": dataset_path,
-    #     "user_id": current_user.id,
-    #     "sample_count": len(images),
-    #     "metadata": [ele.get("metadata", None) for ele in images],
-    #     "parent_id": None,
-    # }), [
-    #     ImageInSchema.model_validate(ele)
-    #     for ele in images
-    # ])
+    return await crud.create_dataset(DataSetInSchema.model_validate({
+        "name": directory_name,
+        "directory_path": dataset_path,
+        "user_id": current_user.id,
+        "sample_count": len(images),
+        "metadata": [ele.get("metadata", None) for ele in images],
+        "parent_id": dataset.id,
+    }), [
+        ImageInSchema.model_validate(ele)
+        for ele in images
+    ])
 
 
 @router.get(
