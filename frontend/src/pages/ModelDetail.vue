@@ -1,7 +1,7 @@
 <template>
   <div>
-    <label for="fruits">Select Fruits</label>
-    <select v-model="datasets" multiple>
+    <label for="datasets" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Datasets</label>
+    <select v-model="datasets" id="datasets" multiple class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
       <option  v-for="(data, index) in datasetOptions" :key="index" :value="data.id">{{ data.name }}</option>
     </select>
   </div>

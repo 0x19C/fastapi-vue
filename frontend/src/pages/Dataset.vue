@@ -1,26 +1,49 @@
 <template>
-  <div class="px-6">
-    <fwb-file-input 
-      v-model="files" 
-      label="Choose files"
-      multiple
-      required
-      accept="image/*, .zip"
-    />
-    <fwb-input
-      v-model="name"
-      placeholder="Dataset Name"
-      label="Name"
-      required
-    />
-    <fwb-button @click="saveFiles" class="btn btn-primary mt-4">Save</fwb-button>
+  <fwb-button @click="showModal">
+    Create
+  </fwb-button>
 
-    <div v-if="files.length !== 0" class="mt-4 border-[1px] border-gray-300 dark:border-gray-600 p-2 rounded-md">
-      <div v-for="file in files" :key="file.name">
-        {{ file.name }}
+  <fwb-modal v-if="isShowModal" @close="closeModal">
+    <template #header>
+      <div class="flex items-center text-lg">
+        Create Dataset
       </div>
-    </div>
-  </div>
+    </template>
+    <template #body>
+      <div class="grid gap-4 mb-4 grid-cols-2">
+        <div class="col-span-2">
+          <fwb-input
+            v-model="name"
+            placeholder="Dataset Name"
+            label="Name"
+            required
+          />
+        </div>
+        <div class="col-span-2">
+          <fwb-file-input 
+            v-model="files" 
+            label="Choose files"
+            multiple
+            required
+            accept="image/*, .zip"
+          />
+          <div v-if="files.length !== 0" class="mt-4 border-[1px] border-gray-300 dark:border-gray-600 p-2 rounded-md">
+            <div v-for="file in files" :key="file.name">
+              {{ file.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+    <template #footer>
+      <div class="flex justify-between">
+        <fwb-button @click="closeModal" color="alternative">
+          Cancel
+        </fwb-button>
+        <fwb-button @click="saveFiles" color="green">Save</fwb-button>
+      </div>
+    </template>
+  </fwb-modal>
 
   <div v-if="loading">Uploading...</div>
 
@@ -39,8 +62,12 @@
         <fwb-table-cell>{{ data.name }}</fwb-table-cell>
         <fwb-table-cell>{{ data.sample_count }}</fwb-table-cell>
         <fwb-table-cell>
-          <fwb-button @click="goDetail(data.id)" class="btn bg-blue-700">Detail</fwb-button>
-          <fwb-button @click="destroy(data.id)" class="btn bg-red-700 ml-3">Delete</fwb-button>
+          <fwb-dropdown placement="bottom" text="Action">
+            <nav class="py-2 text-sm text-gray-700 dark:text-gray-200">
+              <a @click="goDetail(data.id)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detail</a>
+              <a @click="destroy(data.id)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
+            </nav>
+          </fwb-dropdown>
         </fwb-table-cell>
       </fwb-table-row>
     </fwb-table-body>
@@ -49,6 +76,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue/dist/vue.d.mts";
+import { initFlowbite } from "flowbite";
 import {
   FwbButton,
   FwbInput,
@@ -59,7 +87,9 @@ import {
   FwbTableHead,
   FwbTableHeadCell,
   FwbTableRow,
-  FwbCarousel
+  FwbCarousel,
+  FwbDropdown,
+  FwbModal
 } from "flowbite-vue";
 import { useImageStore } from "@/store/modules/images";
 import { useNotificationStore } from "@/store/modules/notifications";
@@ -73,6 +103,7 @@ const name = ref("");
 const loading = ref(false);
 const store = useImageStore();
 const notificationStore = useNotificationStore();
+const isShowModal = ref(false);
 
 const goDetail = async (id: number) => {
   router.push(`/dataset/${id}`);
@@ -88,6 +119,13 @@ const fetchData = async () => {
   store.getList().then((res) => {
     listData.value = res;
   });
+};
+
+const closeModal = () => {
+  isShowModal.value = false
+};
+const showModal = () => {
+  isShowModal.value = true
 };
 
 const saveFiles = async () => {
@@ -114,6 +152,7 @@ const saveFiles = async () => {
         files.value = [];
         name.value = "";
         fetchData();
+        closeModal();
       }
     });
   } catch (error) {
@@ -139,6 +178,7 @@ const destroy = async (id: number) => {
 };
 
 onMounted(() => {
+  initFlowbite();
   fetchData();
 });
 
