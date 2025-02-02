@@ -1,13 +1,35 @@
 <template>
-  <div class="px-6">
-    <fwb-input
-      v-model="name"
-      placeholder="Model Name"
-      label="Name"
-      required
-    />
-    <fwb-button @click="saveModel" class="btn btn-primary mt-4">Save</fwb-button>
-  </div>
+  <fwb-button @click="showModal">
+    Create
+  </fwb-button>
+
+  <fwb-modal v-if="isShowModal" @close="closeModal">
+    <template #header>
+      <div class="flex items-center text-lg">
+        Create Model
+      </div>
+    </template>
+    <template #body>
+      <div class="grid gap-4 mb-4 grid-cols-2">
+        <div class="col-span-2">
+          <fwb-input
+            v-model="name"
+            placeholder="Model Name"
+            label="Name"
+            required
+          />
+        </div>
+      </div>
+    </template>
+    <template #footer>
+      <div class="flex justify-between">
+        <fwb-button @click="closeModal" color="alternative">
+          Cancel
+        </fwb-button>
+        <fwb-button @click="saveModel" color="green">Save</fwb-button>
+      </div>
+    </template>
+  </fwb-modal>
 
   <div v-if="loading">Uploading...</div>
 
@@ -40,6 +62,7 @@ import {
   FwbTableHead,
   FwbTableHeadCell,
   FwbTableRow,
+  FwbModal,
 } from "flowbite-vue";
 import { useModelStore } from "@/store/modules/models";
 import { useNotificationStore } from "@/store/modules/notifications";
@@ -51,6 +74,14 @@ const name = ref("");
 const loading = ref(false);
 const store = useModelStore();
 const notificationStore = useNotificationStore();
+const isShowModal = ref(false);
+
+const closeModal = () => {
+  isShowModal.value = false
+};
+const showModal = () => {
+  isShowModal.value = true
+};
 
 const fetchData = async () => {
   store.getList().then((res) => {
@@ -71,6 +102,7 @@ const saveModel = async () => {
       if (type == "success") {
         name.value = "";
         fetchData();
+        closeModal();
       }
     });
   } catch (error) {
