@@ -51,3 +51,20 @@ class Trainings(models.Model):
     recall = fields.FloatField()
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
+
+
+class DatasetConvertLog(models.Model):
+    origin = fields.ForeignKeyField("models.DataSets", related_name="log_children")
+    target = fields.ForeignKeyField("models.DataSets", related_name="log_parent")
+    brightness = fields.FloatField()
+    noise = fields.FloatField()
+    created_at = fields.DatetimeField(auto_now_add=True)
+    updated_at = fields.DatetimeField(auto_now=True)
+
+
+class ModelConvertLog(models.Model):
+    origin = fields.ForeignKeyField("models.Models", related_name="log_children")
+    target = fields.ForeignKeyField("models.Models", related_name="log_parent")
+    dataset_convert_log = fields.ForeignKeyField("models.DatasetConvertLog", related_name="model_log_reason")
+    created_at = fields.DatetimeField(auto_now_add=True)
+    updated_at = fields.DatetimeField(auto_now=True)

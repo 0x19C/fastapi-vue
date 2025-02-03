@@ -14,7 +14,7 @@ from src.schemas.token import Status
 from src.schemas.datasets import DataSetInSchema, DataSetOutSchema, ImageInSchema, DatasetCloneRequest
 from src.schemas.users import UserOutSchema
 
-from src.database.models import DataSets
+from src.database.models import DataSets, DatasetConvertLog
 
 from src.auth.jwthandler import (
     get_current_user,
@@ -94,7 +94,7 @@ async def clone_dataset(
     
     images = clone_dataset_with_images(dataset.directory_path, dataset_path, req.brightness, req.noise)
 
-    return await crud.create_dataset(DataSetInSchema.model_validate({
+    new_dataset = await crud.create_dataset(DataSetInSchema.model_validate({
         "name": directory_name,
         "directory_path": dataset_path,
         "user_id": current_user.id,
@@ -105,6 +105,15 @@ async def clone_dataset(
         ImageInSchema.model_validate(ele)
         for ele in images
     ])
+
+    await DatasetConvertLog.create(
+        origin_id = dataset.id,
+        target_id = new_dataset.id,
+        brightness = req.brightness,
+        noise = req.noise
+    )
+
+    return new_dataset
 
 
 @router.get(
